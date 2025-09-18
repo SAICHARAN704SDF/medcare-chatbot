@@ -61,12 +61,16 @@ def index():
 # serve known static pages
 pages = ["onboarding","dashboard","assessment","admin","chatbot","music","education","plan","student_resources","predict","signup","login"]
 for pg in pages:
-    @app.route(f"/{pg}")
-    def serve_page(pg=pg):
-        path = os.path.join(STATIC_DIR, f"{pg}.html")
-        if os.path.exists(path):
-            return send_from_directory(STATIC_DIR, f"{pg}.html")
-        return abort(404)
+    def make_page_handler(pg):
+        def handler():
+            path = os.path.join(STATIC_DIR, f"{pg}.html")
+            if os.path.exists(path):
+                return send_from_directory(STATIC_DIR, f"{pg}.html")
+            return abort(404)
+        return handler
+
+    app.add_url_rule(f"/{pg}", endpoint=f"serve_page_{pg}", view_func=make_page_handler(pg))
+
 
 @app.route("/assets/<path:filename>")
 def assets(filename):
