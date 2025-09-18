@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Stress Prediction</title></head>
+<body style="font-family:Arial;">
+
+<nav style="background:#2c3e50;padding:10px;">
+  <a href="/index.html" style="color:white;margin:10px;">Home</a>
+  <a href="/onboarding.html" style="color:white;margin:10px;">Onboarding</a>
+  <a href="/login.html" style="color:white;margin:10px;">Login</a>
+  <a href="/dashboard.html" style="color:white;margin:10px;">Dashboard</a>
+  <a href="/assessment.html" style="color:white;margin:10px;">Assessment</a>
+  <a href="/plan.html" style="color:white;margin:10px;">Action Plan</a>
+  <a href="/student_resources.html" style="color:white;margin:10px;">Education</a>
+  <a href="/music.html" style="color:white;margin:10px;">Music</a>
+  <a href="/predict.html" style="color:white;margin:10px;">Prediction</a>
+  <a href="/chatbot/index.html" style="color:white;margin:10px;">Chatbot</a>
+  <a href="/admin.html" style="color:white;margin:10px;">Admin</a>
+</nav>
+
+<h2>Behavioral Stress Prediction</h2>
+<form id="predictForm">
+  <label>Sleep Hours:</label><br>
+  <input type="number" name="sleep" min="0" max="12" required><br><br>
+
+  <label>Study Hours:</label><br>
+  <input type="number" name="study" min="0" max="16" required><br><br>
+
+  <label>Social Activity (hrs/week):</label><br>
+  <input type="number" name="social" min="0" max="40" required><br><br>
+
+  <button type="submit">Predict</button>
+</form>
+
+<p id="predictionResult"></p>
+
+<script>
+document.getElementById("predictForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  let form = new FormData(e.target);
+  let features = {}
+  for (let [k,v] of form.entries()) { features[k]=v; }
+  let res = await fetch("/predict_fused", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      questionnaire_score: 5,  // placeholder demo score
+      behavior_features: features
+    })
+  });
+  let data = await res.json();
+  document.getElementById("predictionResult").innerText = "Stress Level: " + data.label;
+});
+</script>
+</body>
+</html>

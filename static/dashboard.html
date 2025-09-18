@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="font-family:Arial;">
+
+<nav style="background:#2c3e50;padding:10px;">
+  <a href="/index.html" style="color:white;margin:10px;">Home</a>
+  <a href="/onboarding.html" style="color:white;margin:10px;">Onboarding</a>
+  <a href="/login.html" style="color:white;margin:10px;">Login</a>
+  <a href="/dashboard.html" style="color:white;margin:10px;">Dashboard</a>
+  <a href="/assessment.html" style="color:white;margin:10px;">Assessment</a>
+  <a href="/plan.html" style="color:white;margin:10px;">Action Plan</a>
+  <a href="/student_resources.html" style="color:white;margin:10px;">Education</a>
+  <a href="/music.html" style="color:white;margin:10px;">Music</a>
+  <a href="/predict.html" style="color:white;margin:10px;">Prediction</a>
+  <a href="/chatbot/index.html" style="color:white;margin:10px;">Chatbot</a>
+  <a href="/admin.html" style="color:white;margin:10px;">Admin</a>
+</nav>
+
+<h2>Welcome to Your Dashboard</h2>
+<div>
+  <h3>Latest Stress Score</h3>
+  <p id="latestScore">Loading...</p>
+</div>
+
+<div style="width:600px;">
+  <canvas id="historyChart"></canvas>
+</div>
+
+<script>
+async function loadDashboard() {
+  let res = await fetch("/api/user/demo_user/history");
+  let history = await res.json();
+  if (history.length===0) {
+    document.getElementById("latestScore").innerText = "No assessments yet.";
+    return;
+  }
+  let latest = history[0];
+  document.getElementById("latestScore").innerText = 
+    "Score: " + latest.score + " | Level: " + latest.label;
+
+  let labels = history.map(h => h.ts).reverse();
+  let scores = history.map(h => h.score).reverse();
+  new Chart(document.getElementById("historyChart"), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{ label: 'Stress Score', data: scores, borderColor:'blue'}]
+    }
+  });
+}
+loadDashboard();
+</script>
+</body>
+</html>

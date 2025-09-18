@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEDCARE — Onboarding & Consent</title><link rel="stylesheet" href="medcare.css"></head><body>
+<div class="container">
+  <div class="card header"><div class="logo">MC</div><div style="margin-left:12px"><h1>Welcome to MEDCARE</h1><div class="small">Please review and consent to continue</div></div></div>
+  <div style="height:12px"></div>
+  <div class="card">
+    <h3>Privacy & consent</h3>
+    <p class="small">MEDCARE collects assessment data to offer personalized support. Data used for research will be anonymized. You can opt out anytime from the settings.</p>
+    <label><input id="consent" type="checkbox"> I agree to MEDCARE storing my anonymized assessment data for improving services.</label>
+    <div style="height:12px"></div>
+    <button class="btn" onclick="saveConsent()">I Agree & Continue</button>
+  </div>
+</div>
+<script>
+async function saveConsent(){
+  const ok = document.getElementById('consent').checked;
+  if(!ok){ alert('Please check the consent box to continue'); return; }
+  localStorage.setItem('medcare_consent','true');
+  // optional: call backend
+  try{
+    await fetch('/consent', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: localStorage.getItem('medcare_user') || 'guest', consent:true})});
+  }catch(e){ console.log('consent endpoint error',e); }
+  location.href='dashboard.html';
+}
+</script></body></html>

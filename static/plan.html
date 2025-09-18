@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Personalized Plan</title></head>
+<body style="font-family:Arial;">
+
+<nav style="background:#2c3e50;padding:10px;">
+  <a href="/index.html" style="color:white;margin:10px;">Home</a>
+  <a href="/onboarding.html" style="color:white;margin:10px;">Onboarding</a>
+  <a href="/login.html" style="color:white;margin:10px;">Login</a>
+  <a href="/dashboard.html" style="color:white;margin:10px;">Dashboard</a>
+  <a href="/assessment.html" style="color:white;margin:10px;">Assessment</a>
+  <a href="/plan.html" style="color:white;margin:10px;">Action Plan</a>
+  <a href="/student_resources.html" style="color:white;margin:10px;">Education</a>
+  <a href="/music.html" style="color:white;margin:10px;">Music</a>
+  <a href="/chatbot/index.html" style="color:white;margin:10px;">Chatbot</a>
+  <a href="/admin.html" style="color:white;margin:10px;">Admin</a>
+</nav>
+
+<h2>Your Personalized Action Plan</h2>
+<div id="plan"></div>
+
+<script>
+async function loadPlan() {
+  let res = await fetch("/api/user/demo_user/history");
+  let history = await res.json();
+  if (history.length===0) {
+    document.getElementById("plan").innerText = "No assessment yet.";
+    return;
+  }
+  let latest = history[0];
+  let label = latest.label;
+  let out="";
+  if (label==="Low") {
+    out="Mild Stress → Try breathing exercises, time management tips.";
+  } else if (label==="Medium") {
+    out="Moderate Stress → Guided meditation, journaling, peer counseling.";
+  } else {
+    out="Severe Stress → Please reach out to a professional. Helpline: 1800-123-456";
+  }
+  document.getElementById("plan").innerText = out;
+}
+loadPlan();
+</script>
+</body>
+</html>
