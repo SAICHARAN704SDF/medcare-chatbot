@@ -1,13 +1,9 @@
- # Core framework
 flask
 flask-cors
 gunicorn
-
-# Machine Learning
 scikit-learn
 numpy
 pandas
 nltk
-
-# Optional (useful helpers, already in your repo)
 joblib
+openai

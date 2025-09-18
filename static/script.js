@@ -1,4 +1,5 @@
-// helper functions
+// helper functions used by pages
 async function apiLogin(uid){ return fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({user_id:uid})}).then(r=>r.json()); }
 async function apiAssessment(obj){ return fetch('/api/assessment',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify(obj)}).then(r=>r.json()); }
 async function apiPredictFused(obj){ return fetch('/predict_fused',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify(obj)}).then(r=>r.json()); }
+async function apiSummarize(user_id){ return fetch('/summarize_assessment',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({user_id:user_id})}).then(r=>r.json()); }
