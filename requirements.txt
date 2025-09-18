@@ -1,9 +1,8 @@
 flask
-flask-cors
 gunicorn
+joblib
 scikit-learn
 numpy
 pandas
 nltk
-joblib
-openai
+python-dotenv

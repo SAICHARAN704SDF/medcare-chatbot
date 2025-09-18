@@ -1,1 +1,31 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login — MEDCARE</title><link rel="stylesheet" href="/static/styles.css"></head><body><div class="container"><div class="header"><div style="display:flex;gap:12px;align-items:center"><div class="logo"></div><div><strong>MEDCARE</strong></div></div></div><div class="card" style="max-width:520px;margin:0 auto"><h3>Login</h3><div class="small">Use your Student ID</div><div style="margin-top:10px"><input id="uid" placeholder="Student ID" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef0"></div><div style="margin-top:12px;display:flex;justify-content:flex-end"><button id="login" class="btn">Login</button></div><div id="msg" class="small" style="margin-top:8px"></div></div></div><script>document.getElementById('login').addEventListener('click',async()=>{const uid=document.getElementById('uid').value.trim(); if(!uid){document.getElementById('msg').innerText='Enter ID';return;} let r=await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:uid})}); let j=await r.json(); if(j.status){localStorage.setItem('medcare_user',uid); location.href='/dashboard.html'} else document.getElementById('msg').innerText='Login failed';});</script></body></html>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login - MEDCARE</title>
+<link rel="stylesheet" href="/static/css/style.css"></head><body>
+<div class="header container"><div style="display:flex;gap:12px;align-items:center"><div class="logo"></div><div><div class="h1">MEDCARE</div><div class="small">Sign in to your account</div></div></div></div>
+<div class="container" style="display:flex;gap:30px;align-items:center;min-height:65vh">
+  <div style="flex:1"><img src="/static/assets/login-illustration.png" style="width:100%;border-radius:12px"></div>
+  <div style="width:420px">
+    <div class="card">
+      <h3>Welcome back</h3>
+      <div class="small">Enter Student ID and password</div>
+      <div style="margin-top:12px"><input id="uid" placeholder="Student ID" style="width:100%;padding:12px;border-radius:10px;border:1px solid #e6eef0"><input id="pwd" type="password" placeholder="Password" style="width:100%;padding:12px;border-radius:10px;border:1px solid #e6eef0;margin-top:10px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px"><button id="loginBtn" class="btn">Sign in</button><a href="/index" class="small">Back</a></div>
+      <div id="msg" class="small" style="margin-top:10px"></div>
+      <div style="margin-top:12px" class="small">Don't have an account? <a href="#" id="regLink">Register</a></div>
+    </div>
+  </div>
+</div>
+<script>
+document.getElementById('loginBtn').addEventListener('click', async ()=>{
+  const uid=document.getElementById('uid').value.trim(), pwd=document.getElementById('pwd').value;
+  if(!uid||!pwd){document.getElementById('msg').innerText='Enter both fields';return;}
+  const res = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({user_id:uid,password:pwd})});
+  const j = await res.json();
+  if(j.status){ localStorage.setItem('medcare_user', uid); window.location='/dashboard'; } else { document.getElementById('msg').innerText = j.error || 'Login failed'; }
+});
+document.getElementById('regLink').addEventListener('click', async ()=>{
+  const uid=prompt('Choose Student ID (e.g. S1001)'), pwd=prompt('Choose password'); if(!uid||!pwd) return alert('cancelled');
+  const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:uid,password:pwd})}); const j=await res.json();
+  if(j.status){ alert('Registered!'); localStorage.setItem('medcare_user', uid); window.location='/dashboard'; } else alert(j.error||'Error');
+});
+</script>
+</body></html>

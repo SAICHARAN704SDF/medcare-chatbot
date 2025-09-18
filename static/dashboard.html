@@ -1,2 +1,58 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard — MEDCARE</title><link rel="stylesheet" href="/static/styles.css"><script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head><body><div class="container"><div class="header"><div style="display:flex;gap:12px;align-items:center"><div class="logo"></div><div><strong>MEDCARE</strong><div class="small">Dashboard</div></div></div><div><a href="/login.html" class="small">Switch</a></div></div><div class="grid"><div class="card"><h3>Latest Stress Score</h3><div id="latest" class="small">Loading...</div></div><div class="card"><h3>Quick Actions</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="/assessment.html">Take Assessment</a><a class="btn-outline" href="/chatbot/index.html">Chat</a><a class="btn-outline" href="/music.html">Music</a></div></div></div><div class="card" style="margin-top:16px"><h3>Progress Over Time</h3><canvas id="historyChart" style="max-height:300px"></canvas></div><div class="card" style="margin-top:16px"><h3>Personalized Summary</h3><div id="plan" class="small">Loading...</div></div><div class="footer small">Tip: take assessments every 1–2 weeks to track trends.</div></div><script>async function loadDashboard(){ const uid=localStorage.getItem('medcare_user')||'demo_user'; const res=await fetch('/api/user/'+uid+'/history'); const data=await res.json(); if(!data||data.length===0){document.getElementById('latest').innerText='No assessments yet'; return;} const latest=data[0]; document.getElementById('latest').innerText=latest.score + ' ('+latest.label+') • ' + new Date(latest.ts).toLocaleString(); const labels=data.map(r=>new Date(r.ts).toLocaleDateString()).reverse(); const scores=data.map(r=>r.score).reverse(); new Chart(document.getElementById('historyChart'),{type:'line',data:{labels:labels,datasets:[{label:'Stress Score',data:scores,borderColor:'#2d7f88',tension:0.3}]}}); // fetch summarized plan via LLM endpoint
-try{ const s = await fetch('/summarize_assessment',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({user_id:uid})}); if(s.ok){ const j=await s.json(); document.getElementById('plan').innerText=j.plan; } }catch(e){ console.log('Plan fetch failed',e); } } loadDashboard();</script></body></html>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard - MEDCARE</title>
+<link rel="stylesheet" href="/static/css/style.css"><script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head><body>
+<div class="header container"><div style="display:flex;gap:12px;align-items:center"><div class="logo"></div><div><div class="h1">MEDCARE</div><div class="small">Dashboard</div></div></div><div><a class="small" href="/login">Switch</a></div></div>
+<div style="display:flex;gap:24px" class="container">
+  <aside class="sidebar card">
+    <div style="margin-bottom:18px"><strong>Navigation</strong></div>
+    <div class="nav-item" onclick="location.href='/dashboard'">Home</div>
+    <div class="nav-item" onclick="location.href='/assessment'">Assessment</div>
+    <div class="nav-item" onclick="location.href='/resources'">Resources</div>
+    <div class="nav-item" onclick="location.href='/index'">Logout</div>
+    <div style="margin-top:18px" class="small">Privacy: data is anonymized.</div>
+  </aside>
+  <main style="flex:1">
+    <div class="card" id="welcomeCard"><h2>Welcome, <span id="uname">Student</span></h2><div class="small">Your wellbeing dashboard</div></div>
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:16px">
+      <div>
+        <div class="card"><h3>Latest Stress Score</h3><div id="latest" class="small">No data yet</div><div style="margin-top:12px" class="progress"><i id="progbar" style="width:0%"></i></div></div>
+        <div class="card" style="margin-top:12px"><h3>Types of Stress</h3>
+          <table class="table"><thead><tr><th>Type</th><th>Causes</th><th>Effects</th></tr></thead>
+            <tbody>
+              <tr><td>Academic</td><td>Deadlines, exams</td><td>Sleep loss, anxiety</td></tr>
+              <tr><td>Social</td><td>Peer pressure</td><td>Isolation, low mood</td></tr>
+              <tr><td>Digital</td><td>Overuse of screens</td><td>Sleep issues, distraction</td></tr>
+              <tr><td>Financial</td><td>Money stress</td><td>Worry, reduced focus</td></tr>
+            </tbody></table></div>
+      </div>
+      <div>
+        <div class="card"><h3>Insights</h3><div id="ins" class="small">Take an assessment to see personalized insights.</div></div>
+        <div class="card" style="margin-top:12px"><h3>Visual</h3><canvas id="chart" style="width:100%;height:220px"></canvas></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>In-depth Information</h3><p class="small">Stress affects cognitive function, sleep, and emotional regulation. Academic stress often stems from heavy workload and performance pressure. Strategies: regular sleep schedule, small study blocks, exercise, and talking to peers or counselors.</p></div>
+  </main>
+</div>
+<div class="footer">© MEDCARE — Support for students in India</div>
+<script>
+async function loadDashboard(){
+  const uid = localStorage.getItem('medcare_user') || prompt('Enter Student ID to view dashboard:','S1001') || 'guest';
+  localStorage.setItem('medcare_user', uid);
+  document.getElementById('uname').innerText = uid;
+  const r = await fetch('/api/user/'+uid+'/history');
+  const data = await r.json();
+  if(data && data.length>0){
+    document.getElementById('latest').innerText = data[0].score + ' ('+data[0].label+') • ' + new Date(data[0].ts).toLocaleString();
+    const pct = Math.min(100, Math.max(0, data[0].score));
+    document.getElementById('progbar').style.width = pct + '%';
+    document.getElementById('ins').innerText = data[0].label + ' — Click Assessment for personalized plan.';
+    // chart
+    const labels = data.map(d=>new Date(d.ts).toLocaleDateString()).reverse();
+    const scores = data.map(d=>d.score).reverse();
+    new Chart(document.getElementById('chart'),{type:'line',data:{labels:labels,datasets:[{label:'Stress',data:scores,borderColor:'#0ea5a1',tension:0.3,fill:false}]}});
+  } else {
+    document.getElementById('latest').innerText = 'No assessments yet. Take one to get insights.';
+  }
+}
+loadDashboard();
+</script>
+</body></html>
