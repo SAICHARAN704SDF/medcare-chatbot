@@ -1,22 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <meta charset="UTF-8">
-  <title>Sentiment Analyzer</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Sentiment Analyzer</h1>
-
-  <input type="text" id="userInput" placeholder="Type your feeling...">
-  <button onclick="analyzeText()">Analyze</button>
-
-  <p id="result"></p>
-
-  <h2>History</h2>
-  <ul id="history"></ul>
-
-  <script src="script.js"></script>
-</body>
-</html>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chat</title><link rel="stylesheet" href="/static/styles.css"></head><body>
+<div class="container"><div class="header"><div style="display:flex;gap:12px;align-items:center"><div class="logo"></div><div><strong>MEDCARE</strong></div></div></div>
+<div class="card" style="max-width:800px;margin:0 auto"><h3>Chat</h3><div class="chat-box"><div id="log" class="chat-log"></div><div class="chat-input"><input id="m" placeholder="How can I help?" style="flex:1;padding:10px;border-radius:8px;border:1px solid #e6eef0"><button id="s" class="btn">Send</button></div></div></div></div>
+<script>const log=document.getElementById('log');function p(s,c){const d=document.createElement('div');d.className='chat-bubble '+c;d.innerText=s;log.appendChild(d);log.scrollTop=log.scrollHeight;}document.getElementById('s').addEventListener('click',async()=>{const t=document.getElementById('m').value.trim(); if(!t) return; p(t,'user'); document.getElementById('m').value=''; const r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:localStorage.getItem('medcare_user')||'demo_user', message:t})}); const j=await r.json(); p(j.reply||'Sorry','bot');});</script></body></html>

@@ -1,24 +1,9 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEDCARE — Onboarding & Consent</title><link rel="stylesheet" href="medcare.css"></head><body>
-<div class="container">
-  <div class="card header"><div class="logo">MC</div><div style="margin-left:12px"><h1>Welcome to MEDCARE</h1><div class="small">Please review and consent to continue</div></div></div>
-  <div style="height:12px"></div>
-  <div class="card">
-    <h3>Privacy & consent</h3>
-    <p class="small">MEDCARE collects assessment data to offer personalized support. Data used for research will be anonymized. You can opt out anytime from the settings.</p>
-    <label><input id="consent" type="checkbox"> I agree to MEDCARE storing my anonymized assessment data for improving services.</label>
-    <div style="height:12px"></div>
-    <button class="btn" onclick="saveConsent()">I Agree & Continue</button>
-  </div>
-</div>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Onboarding</title><link rel="stylesheet" href="/static/styles.css"></head><body>
+<div class="container"><div class="header"><div style="display:flex;gap:12px;align-items:center"><div class="logo"></div><div><strong>MEDCARE</strong><div class="small">Student wellbeing</div></div></div><div><a href="/login.html" class="small">Login</a></div></div>
+<div class="card"><h2 style="color:#2d7f88">Welcome</h2><p class="small">We collect anonymized assessments to help you track progress. This is not medical advice.</p><div style="margin-top:10px"><label><input id="agree" type="checkbox"> I consent to anonymized data collection</label></div><div style="margin-top:12px"><button id="cont" class="btn" disabled>Continue</button></div><div id="note" class="small" style="margin-top:8px;display:none"></div></div>
+<div class="footer small">If you are in crisis, contact local emergency services.</div></div>
 <script>
-async function saveConsent(){
-  const ok = document.getElementById('consent').checked;
-  if(!ok){ alert('Please check the consent box to continue'); return; }
-  localStorage.setItem('medcare_consent','true');
-  // optional: call backend
-  try{
-    await fetch('/consent', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id: localStorage.getItem('medcare_user') || 'guest', consent:true})});
-  }catch(e){ console.log('consent endpoint error',e); }
-  location.href='dashboard.html';
-}
+const cb=document.getElementById('agree'),btn=document.getElementById('cont'),note=document.getElementById('note');
+cb.addEventListener('change',()=>btn.disabled=!cb.checked);
+btn.addEventListener('click',async()=>{btn.disabled=true;btn.innerText='Saving...'; try{let res=await fetch('/consent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:'demo_user',consent:true})}); if(res.ok) location.href='/login.html'; else note.style.display='block';}catch(e){note.innerText=e.message;note.style.display='block';btn.disabled=false}});
 </script></body></html>

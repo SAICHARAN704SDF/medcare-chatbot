@@ -1,0 +1,10 @@
+:root{--accent:#2d7f88;--accent2:#66c2cd;--bg:#f4fbfc;--muted:#6b7280}
+body{font-family:Inter,Arial;margin:0;background:linear-gradient(180deg,var(--bg),#eaf9fb);color:#022}
+.container{max-width:1100px;margin:28px auto;padding:18px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{width:54px;height:54px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px}
+.card{background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(10,20,30,0.04)}
+.btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
+.small{font-size:0.95rem;color:var(--muted)}
+.nav a{margin-left:12px;color:var(--accent);text-decoration:none;font-weight:600}
+.footer{margin-top:28px;text-align:center;color:var(--muted);font-size:0.9rem}

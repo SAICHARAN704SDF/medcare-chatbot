@@ -1,52 +1,7 @@
-
-<!DOCTYPE html>
-<html>
-<head><title>Assessment</title></head>
-<body style="font-family:Arial;">
-
-<nav style="background:#2c3e50;padding:10px;">
-  <a href="/index.html" style="color:white;margin:10px;">Home</a>
-  <a href="/onboarding.html" style="color:white;margin:10px;">Onboarding</a>
-  <a href="/login.html" style="color:white;margin:10px;">Login</a>
-  <a href="/dashboard.html" style="color:white;margin:10px;">Dashboard</a>
-  <a href="/assessment.html" style="color:white;margin:10px;">Assessment</a>
-  <a href="/plan.html" style="color:white;margin:10px;">Action Plan</a>
-  <a href="/student_resources.html" style="color:white;margin:10px;">Education</a>
-  <a href="/music.html" style="color:white;margin:10px;">Music</a>
-  <a href="/chatbot/index.html" style="color:white;margin:10px;">Chatbot</a>
-  <a href="/admin.html" style="color:white;margin:10px;">Admin</a>
-</nav>
-
-<h2>Stress Assessment Questionnaire</h2>
-<form id="assessmentForm">
-  <label>How stressed do you feel today? (1-10)</label><br>
-  <input type="number" name="q1" min="1" max="10" required><br><br>
-
-  <label>How many hours did you sleep last night?</label><br>
-  <input type="number" name="q2" min="0" max="12" required><br><br>
-
-  <label>Do you feel you can manage your workload? (1-10)</label><br>
-  <input type="number" name="q3" min="1" max="10" required><br><br>
-
-  <button type="submit">Submit</button>
-</form>
-
-<p id="result"></p>
-
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Assessment</title><link rel="stylesheet" href="/static/styles.css"></head><body>
+<div class="container"><div class="header"><div style="display:flex;gap:12px;align-items:center"><div class="logo"></div><div><strong>MEDCARE</strong></div></div></div>
+<div class="card" style="max-width:900px;margin:0 auto"><h3>Assessment - 10 questions</h3><form id="f"><div class="form-row"><label>1. How often felt anxious this week? (1-10)</label><input type="range" name="q1" min="1" max="10" value="5" oninput="o1.innerText=this.value"><div class="small">Value: <span id="o1">5</span></div></div><div class="form-row"><label>2. Average sleep quality (1-10)</label><input type="range" name="q2" min="1" max="10" value="5" oninput="o2.innerText=this.value"><div class="small">Value: <span id="o2">5</span></div></div><div class="form-row"><label>3. Manageability of study workload (1-10)</label><input type="range" name="q3" min="1" max="10" value="5" oninput="o3.innerText=this.value"><div class="small">Value: <span id="o3">5</span></div></div><div class="form-row"><label>4. How often felt overwhelmed? (1-10)</label><input type="range" name="q4" min="1" max="10" value="5" oninput="o4.innerText=this.value"><div class="small">Value: <span id="o4">5</span></div></div><div class="form-row"><label>5. Difficulty concentrating (1-10)</label><input type="range" name="q5" min="1" max="10" value="5" oninput="o5.innerText=this.value"><div class="small">Value: <span id="o5">5</span></div></div><div class="form-row"><label>6. Mood level (1-10)</label><input type="range" name="q6" min="1" max="10" value="5" oninput="o6.innerText=this.value"><div class="small">Value: <span id="o6">5</span></div></div><div class="form-row"><label>7. Irritability frequency (1-10)</label><input type="range" name="q7" min="1" max="10" value="5" oninput="o7.innerText=this.value"><div class="small">Value: <span id="o7">5</span></div></div><div class="form-row"><label>8. Social avoidance (1-10)</label><input type="range" name="q8" min="1" max="10" value="5" oninput="o8.innerText=this.value"><div class="small">Value: <span id="o8">5</span></div></div><div class="form-row"><label>9. Academic worries affected sleep (1-10)</label><input type="range" name="q9" min="1" max="10" value="5" oninput="o9.innerText=this.value"><div class="small">Value: <span id="o9">5</span></div></div><div class="form-row"><label>10. Confidence managing stress (1-10)</label><input type="range" name="q10" min="1" max="10" value="5" oninput="o10.innerText=this.value"><div class="small">Value: <span id="o10">5</span></div></div><div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn" type="submit">Submit</button></div></form><div id="msg" class="small" style="margin-top:10px"></div></div>
 <script>
-document.getElementById("assessmentForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  let form = new FormData(e.target);
-  let answers = {}, score = 0;
-  for (let [k,v] of form.entries()) { answers[k]=v; score+=parseInt(v); }
-  let res = await fetch("/api/assessment", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({user_id:"demo_user", score:score, answers:answers})
-  });
-  let data = await res.json();
-  document.getElementById("result").innerText = "Saved. Stress Level: " + data.label;
-});
-</script>
-</body>
-</html>
+document.getElementById('f').addEventListener('submit', async function(e){ e.preventDefault(); const uid=localStorage.getItem('medcare_user')||'demo_user'; const fd=new FormData(e.target); let answers={}, sum=0; for(const [k,v] of fd.entries()){answers[k]=v; sum+=parseInt(v);} const score = Math.round((sum/ (10*10)) * 100); // normalized
+const res = await fetch('/api/assessment',{method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({user_id:uid, score:score, answers:answers})}); const j=await res.json(); if(res.ok){ document.getElementById('msg').innerText='Saved: '+j.label; setTimeout(()=> location.href='/plan.html',1000);} else document.getElementById('msg').innerText='Error'; });
+</script></body></html>
