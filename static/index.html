@@ -1,48 +1,11 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEDCARE — Welcome</title><link rel="stylesheet" href="medcare.css"></head><body>
-<div class="container">
-  <div class="card header">
-    <div class="logo">MC</div>
-    <div class="brand">
-      <h1>MEDCARE</h1>
-      <div class="small">Your calm companion for mental wellbeing</div>
-    </div>
-  </div>
 
-  <div style="height:20px"></div>
-
-  <div class="card">
-    <h2 style="margin-top:0">Welcome back — Take a moment</h2>
-    <p class="small">Log in to continue your personalized stress-relief journey. MEDCARE gently guides you through assessment, micro-habits, and supportive tools.</p>
-    <div style="display:flex;gap:12px;margin-top:12px">
-      <input class="input" id="name" placeholder="Enter your name">
-      <button class="btn" onclick="go()">Start</button>
-    </div>
-    <div style="margin-top:12px" class="small">New here? <a href="assessment.html">Take a quick assessment</a> to receive a personalized plan.</div>
-  </div>
-
-  <div style="height:20px"></div>
-
-  <div class="row">
-    <div class="col card">
-      <h3>Calming visual</h3>
-      <img src="assets/calm_landscape.png" style="width:100%;border-radius:10px;margin-top:8px">
-    </div>
-    <div class="col card">
-      <h3>Quick actions</h3>
-      <ul class="small">
-        <li>5-minute guided breathing</li>
-        <li>Play soothing music</li>
-        <li>Read one micro-article on stress types</li>
-      </ul>
-      <div style="height:12px"></div>
-      <button class="btn" onclick="location.href='dashboard.html'">Open Dashboard</button>
-    </div>
-  </div>
-
-  <div class="footer">MEDCARE — Designed to feel supportive, serene and modern.</div>
-</div>
-
-<script>
-function go(){ const n=document.getElementById('name').value||'Friend'; localStorage.setItem('medcare_user', n); location.href='dashboard.html'; }
-</script>
-</body></html>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MEDCARE Chatbot</title>
+</head>
+<body>
+  <h1>Welcome to MEDCARE!</h1>
+  <p>Your stress detection and chatbot app is running 🚀</p>
+</body>
+</html>
